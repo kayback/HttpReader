@@ -38,4 +38,14 @@ public:
 
         return out.str();
     }
+
+    static std::string getPcapFileName(int argc, char* argv[]) {
+        for (int i = 1; i < argc; ++i) { // argv[0] is the program name
+            std::string arg = argv[i];
+            if (arg == "--pcap" && i + 1 < argc) {
+                return argv[i + 1]; // The next argument is the pcap file name
+            }
+        }
+        return ""; // Return an empty string if no pcap file name was found
+    }
 };

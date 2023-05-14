@@ -3,11 +3,21 @@
 
 
 int main(int argc, char* argv[]) {
-    
-    PacketCapturer capturer("eth0");
-    HttpAnalyzer analyzer;
 
-    if (!capturer.open()) {
+    // PacketCapturer capturer("eth0");
+    // HttpAnalyzer analyzer;
+    std::shared_ptr<HttpAnalyzer> analyzer = std::make_shared<HttpAnalyzer>();
+    std::unique_ptr<PacketCapturer> capturer;
+
+    std::string pcapFile = Utils::getPcapFileName(argc, argv);
+    
+    if (!pcapFile.empty()) {
+        capturer = std::make_unique<PacketCapturer>(pcapFile, true);
+    } else {
+        capturer = std::make_unique<PacketCapturer>("eth0");
+    }
+
+    if (!capturer->open()) {
         std::cerr << "Failed to open device\n";
         return 1;
     }
